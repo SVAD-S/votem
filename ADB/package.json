@@ -1,0 +1,26 @@
+{
+  "name": "tryapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js",
+    "data:export": "node Seeder.js",
+    "data:destroy": "node Seeder.js -d"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "firebase": "^9.22.0",
+    "firebase-admin": "^11.8.0",
+    "nodemon": "^2.0.22",
+    "uuid": "^9.0.0"
+  }
+}
