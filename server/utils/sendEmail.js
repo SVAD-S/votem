@@ -31,6 +31,7 @@ const sendEmail = async (options) => {
       }
     });
   } catch (error) {
+    throw new Error(error.message);
     console.log(error);
   }
 };

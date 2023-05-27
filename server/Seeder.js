@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
-import db from "./firebase.js";
-
+import connectDB from "./config/db.js";
+import Voter from "./models/Adb.js";
 function generateRandomAadhar() {
   const aadharNumber = Math.floor(100000000000 + Math.random() * 900000000000);
   return String(aadharNumber);
@@ -110,29 +109,29 @@ const mockData = [
     aadhar: generateRandomAadhar(),
   },
 ];
+
+connectDB();
+
 const exportData = async () => {
-  for (const data of mockData) {
-    try {
-      const docRef = await db.collection("Users").doc(uuidv4()).set(data);
-      console.log("Document written with ID: ", docRef);
-    } catch (error) {
-      console.error("Error adding document: ", error);
-    }
-  }
-};
-
-const deleteAllData = async () => {
   try {
-    const querySnapshot = await db.collection("Users").get();
-
-    querySnapshot.forEach(async (doc) => {
-      await doc.ref.delete();
-      console.log("Document deleted with ID: ", doc.id);
-    });
+    const voters = await Voter.insertMany(mockData);
+    console.log("Data imported");
+    process.exit();
   } catch (error) {
-    console.error("Error deleting documents: ", error);
+    console.log(`Error on importing ${error.message}`);
+    process.exit(1);
   }
 };
 
-if (process.argv[2] === "-d") deleteAllData();
+const destroyData = async () => {
+  try {
+    await Voter.deleteMany({});
+    console.log("Data destroyed");
+    process.exit();
+  } catch (error) {
+    console.log(`Error on importing ${error.message}`);
+  }
+};
+
+if (process.argv[2] === "-d") destroyData();
 else exportData();
