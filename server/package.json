@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
-    "start": "concurrently \"npm run dev\" \"cd ../ADB && npm run server\""
+    "data:export": "node Seeder.js",
+    "data:destroy": "node Seeder.js -d"
   },
   "author": "",
   "license": "ISC",

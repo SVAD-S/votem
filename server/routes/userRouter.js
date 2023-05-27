@@ -2,6 +2,7 @@ import { Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import sendEmail from "../utils/sendEmail.js";
 import User from "../models/userModel.js";
+import Voter from "../models/Adb.js";
 import axios from "axios";
 
 const userRouter = Router();
@@ -17,27 +18,24 @@ userRouter.post(
         throw new Error("Aadhar field are required");
       }
 
-      const response = await axios.get(
-        `http://localhost:5050/api/adb/users/${aadhar}`
-      );
+      const voter = await Voter.findOne({ aadhar });
 
-      if (response.data) {
-        console.log(response.data);
-      } else if (response.status === 404) {
+      if (!voter) {
+        res.status(404);
         throw new Error(`There is no user with aadhar ${aadhar}`);
-      } else if (response.status !== 200) {
-        throw new Error("Request failed with status " + response.status);
       }
 
-      const data = response.data?.data;
-
       let user = await User.findOne({
-        ...data,
+        aadhar,
       });
 
       if (!user) {
+        const { name, email, mobile } = voter;
         user = await User.create({
-          ...data,
+          name,
+          email,
+          aadhar,
+          mobile,
         });
       }
 
