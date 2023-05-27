@@ -4,26 +4,26 @@ import { Link } from "react-router-dom";
 
 const ElectionData = () => {
   const [electionList, setElectionList] = useState([]);
-  const [id, setId] = useState(null);
+  // const [id, setId] = useState(null);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/electionName", {})
-      .then((response) => {
-        const data = response.data;
-        setElectionList(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8000/api/electionName", {})
+  //     .then((response) => {
+  //       const data = response.data;
+  //       setElectionList(data);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // }, []);
 
   const handleInputChange = (e) => {
-    const name = e.target.innerHTML;
-    const index = electionList.findIndex(
-      (election) => election.election_name === name
-    );
-    setId(electionList[index].election_id);
+    //   const name = e.target.innerHTML;
+    //   const index = electionList.findIndex(
+    //     (election) => election.election_name === name
+    //   );
+    //   setId(electionList[index].election_id);
   };
 
   return (

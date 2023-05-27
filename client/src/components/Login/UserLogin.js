@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import OTP from "../OTP/OTP";
 
-const Login = () => {
+const UserLogin = () => {
   const [ipNum, setIpNum] = useState("");
   const [isOtpSend, setIsOtpSend] = useState(false);
 
@@ -64,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default UserLogin;

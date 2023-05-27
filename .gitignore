@@ -2,3 +2,4 @@
 **/.env
 **/Credentials.json
 **/.vscode
+**/package-lock.json

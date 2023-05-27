@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import ElectionContract from "./build/contracts/ElectionContract.json";
+import { Outlet } from "react-router-dom";
+import Navbar from "./components/custom/Navbar";
 
 function App() {
   const [account, setAccount] = useState("");
@@ -52,10 +54,12 @@ function App() {
   }, [account]);
   return (
     <>
-      <div className="text-orange-500">
+      {/* <div className="text-orange-500">
         Account is {account} and greeting is {greeting}
       </div>
-      <button onClick={setGreeter}>Thomas</button>
+      <button onClick={setGreeter}>Thomas</button> */}
+      <Navbar />
+      <Outlet />
     </>
   );
 }
