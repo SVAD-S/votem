@@ -1,39 +1,15 @@
 import React from "react";
 
 function NewElection() {
-  // class NewElection extends Component {
-  //   constructor(props) {
-  //     super(props);
-  //     this.state = {
-  //       election_name: "",
-  //       election_organizer: "",
-  //       election_password: "",
-  //     };
-  //   }
-
   const handleInputChange = (e) => {};
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //   const { election_name, election_organizer, election_password } = this.state;
-    //   console.log(election_name);
-    //   axios
-    //     .post("http://localhost:8000/api/electionName", {
-    //       election_name: election_name,
-    //       election_organizer: election_organizer,
-    //       election_password: election_password,
-    //     })
-    //     .then(function (response) {
-    //       window.location.assign("/");
-    //     })
-    //     .catch(function (err) {
-    //       console.error(err);
-    //     });
   };
 
   return (
-    <div className="min-h-screen w-1/2 flex-row items-center justify-center bg-gray-50 py-12 px-16 sm:px-6 lg:px-8">
-      <div className="w-full space-y-8">
+    <div className="flex flex-row items-center justify-center bg-gray-50 py-12 px-16 sm:px-6 lg:px-8">
+      <div className="w-1/3 space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             New Election

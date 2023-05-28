@@ -1,34 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 const ElectionData = () => {
   const [electionList, setElectionList] = useState([]);
-  // const [id, setId] = useState(null);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:8000/api/electionName", {})
-  //     .then((response) => {
-  //       const data = response.data;
-  //       setElectionList(data);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // }, []);
-
-  const handleInputChange = (e) => {
-    //   const name = e.target.innerHTML;
-    //   const index = electionList.findIndex(
-    //     (election) => election.election_name === name
-    //   );
-    //   setId(electionList[index].election_id);
-  };
+  const handleInputChange = (e) => {};
 
   return (
-    <div className="container py-8">
-      <h2 className="mt-3 mb-16 text-center text-3xl font-extrabold text-gray-900">
+    <div className="container py-12">
+      <h2 className="mt-6 mb-16 text-center text-3xl font-extrabold text-gray-900">
         Active Elections
       </h2>
       {electionList.map((election) => (

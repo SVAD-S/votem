@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className="font-sans flex flex-col text-center sm:flex-row sm:text-left sm:justify-between py-6 px-6 bg-indigo-500 shadow sm:items-baseline w-full">
+    <nav className="font-sans flex flex-col flex-grow-0 text-center sm:flex-row sm:text-left sm:justify-between py-6 px-6 bg-indigo-500 shadow sm:items-baseline w-full">
       <div className="mb-2 sm:mb-0">
         <Link to="/">
           <span className="font-extrabold text-2xl text-white">Votem</span>

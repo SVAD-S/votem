@@ -53,14 +53,14 @@ function App() {
     }
   }, [account]);
   return (
-    <>
+    <div className="h-screen flex flex-col bg-gray-50 ">
       {/* <div className="text-orange-500">
         Account is {account} and greeting is {greeting}
       </div>
       <button onClick={setGreeter}>Thomas</button> */}
       <Navbar />
       <Outlet />
-    </>
+    </div>
   );
 }
 
