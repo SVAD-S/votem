@@ -2,14 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import ErrorPage from "./components/custom/Error-page";
+import ErrorPage from "./components/Error-page";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./components/custom/Login";
-import Home from "./components/custom/Home";
+import Login from "./components/Login";
+import Home from "./components/Home";
 import UserLogin from "./components/Login/UserLogin";
 import SignUp from "./components/SignUp/SignUp";
-import NewElection from "./components/custom/NewElection";
-import ElectionData from "./components/custom/ElectionData";
+import NewElection from "./components/NewElection";
+import ElectionData from "./components/ElectionData";
+
+import { AuthContextProvider } from "./components/custom/context/AuthContext";
+
+// import { AuthContextProvider } from "./components/custom/AuthContext";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +34,10 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
+        path: "/newelection",
+        element: <NewElection />,
+      },
+      {
         path: "/new-election",
         element: <NewElection />,
       },
@@ -43,6 +51,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
   </React.StrictMode>
 );

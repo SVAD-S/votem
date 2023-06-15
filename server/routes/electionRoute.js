@@ -56,6 +56,8 @@ electionRouter.post(
   "/adminLogin",
   expressAsyncHandler(async (req, res) => {
     try {
+      const name = req.body.username
+      const pswd = req.body.password
       const election = await Admin.findOne({
         username: req.body.username,
         password: req.body.password,
@@ -63,7 +65,8 @@ electionRouter.post(
       if (election === null) {
         res.send(false);
       } else {
-        res.send(true);
+        //res.send(true);
+        res.status(200).json({ details: { name, pswd } });
       }
     } catch (error) {
       console.error(error);

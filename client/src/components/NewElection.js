@@ -1,11 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
+import ElectionContract from "../build/contracts/ElectionContract.json";
+import { ethers } from "ethers";
 
 function NewElection() {
-  const handleInputChange = (e) => {};
+  const [account, setAccount] = useState("");
+  const [electionName, setElectionName] = useState("");
+  const [electionDesc, setElectionDesc] = useState("");
+  const Address = ElectionContract.networks[5777].address;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleNameChange = (e) => {
+    setElectionName(e.target.value);
   };
+  const handleDescChange = (e) => {
+    setElectionDesc(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await createElection();
+    console.log("Successfull");
+  };
+
+  async function initializeProvider() {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    return new ethers.Contract(Address, ElectionContract.abi, signer);
+  }
+
+  async function requestAccount() {
+    const account = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    setAccount(account[0]);
+  }
+
+  async function createElection() {
+    if (typeof window.ethereum !== "undefined") {
+      const contract = await initializeProvider();
+
+      console.log(electionName, electionDesc);
+      try {
+        await contract.createElection(electionName, electionDesc);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 
   return (
     <div className="flex flex-row items-center justify-center bg-gray-50 py-12 px-16 sm:px-6 lg:px-8">
@@ -39,7 +79,7 @@ function NewElection() {
                   id="election_name"
                   className="focus:ring-indigo-500 py-2 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                   placeholder="Enter election name"
-                  onChange={handleInputChange}
+                  onChange={handleNameChange}
                   required
                 />
               </div>
@@ -50,7 +90,7 @@ function NewElection() {
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
-                Organizer
+                Description
               </label>
 
               <div className="mt-1 relative rounded-md shadow-sm">
@@ -66,7 +106,7 @@ function NewElection() {
                   id="election_organizer"
                   className="focus:ring-indigo-500 py-2 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                   placeholder="Enter election organizer"
-                  onChange={handleInputChange}
+                  onChange={handleDescChange}
                   required
                 />
               </div>
