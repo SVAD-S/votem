@@ -6,6 +6,22 @@ const ElectionData = () => {
 
   const handleInputChange = (e) => {};
 
+  async function getElections() {
+    // if (typeof window.ethereum !== "undefined") {
+    //   const contract = await initializeProvider();
+    try {
+      let a = await contract.getElectionNames();
+      console.log(a.toString());
+    } catch (error) {
+      console.log(error);
+    }
+    // }
+  }
+
+  useEffect(() => {
+    getElections();
+  }, []);
+
   return (
     <div className="container py-12">
       <h2 className="mt-6 mb-16 text-center text-3xl font-extrabold text-gray-900">

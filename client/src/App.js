@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import ElectionContract from "./build/contracts/ElectionContract.json";
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/custom/Navbar";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [account, setAccount] = useState("");
