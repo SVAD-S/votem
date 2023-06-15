@@ -8,8 +8,8 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import UserLogin from "./components/Login/UserLogin";
 import SignUp from "./components/SignUp/SignUp";
-import NewElection from "./components/custom/NewElection";
-import ElectionData from "./components/custom/ElectionData";
+import NewElection from "./components/NewElection";
+import ElectionData from "./components/ElectionData";
 
 import { AuthContextProvider } from "./components/custom/context/AuthContext";
 

@@ -9,13 +9,13 @@ const ElectionData = () => {
   async function getElections() {
     // if (typeof window.ethereum !== "undefined") {
     //   const contract = await initializeProvider();
-    try {
-      let a = await contract.getElectionNames();
-      console.log(a.toString());
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   let a = await contract.getElectionNames();
+    //   console.log(a.toString());
+    // } catch (error) {
+    //   console.log(error);
     // }
+    //  }
   }
 
   useEffect(() => {

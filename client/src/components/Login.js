@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuthContext } from "./hooks/useAuthContext"
+import { useAuthContext } from "./custom/hooks/useAuthContext";
 
 import { useContext } from "react";
-
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -18,40 +17,41 @@ const Login = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-//added context api
+  //added context api
   const handleSubmit = (e) => {
     e.preventDefault();
-    try{
-    dispatch({ type: "LOGIN_START" });
-    axios.post("http://localhost:8000/api/adminLogin", {
-        username,
-        password,
-      })
-      .then(function (response) {
-        if (response.data) {
-          dispatch({ type: "LOGIN_SUCCESS", payload: response.data.details });
-         // console.log('Authcontext state new:')
-          // console.log('payload', response.data.details)
-          // console.log('response data' , response)
-         
-          window.location.assign("/newelection");
-        } else {
-          dispatch({type:"LOGIN_FAILURE",payload:{message:"Invalid credentials"}})
-          alert("Incorrect Username or Password");
-        }
-      })
-      .catch(function (err) {
-        dispatch({ type: "LOGIN_FAILURE", payload: {message:" "} });
-        console.error(err);
-      });
-  }
-  catch (err) {
-    dispatch({ type: "LOGIN_FAILURE", payload: {message:" "} });}
-};
+    try {
+      dispatch({ type: "LOGIN_START" });
+      axios
+        .post("http://localhost:8000/api/adminLogin", {
+          username,
+          password,
+        })
+        .then(function (response) {
+          if (response.data) {
+            dispatch({ type: "LOGIN_SUCCESS", payload: response.data.details });
+            // console.log('Authcontext state new:')
+            // console.log('payload', response.data.details)
+            // console.log('response data' , response)
+
+            window.location.assign("/newelection");
+          } else {
+            dispatch({
+              type: "LOGIN_FAILURE",
+              payload: { message: "Invalid credentials" },
+            });
+            alert("Incorrect Username or Password");
+          }
+        })
+        .catch(function (err) {
+          dispatch({ type: "LOGIN_FAILURE", payload: { message: " " } });
+          console.error(err);
+        });
+    } catch (err) {
+      dispatch({ type: "LOGIN_FAILURE", payload: { message: " " } });
+    }
+  };
   //added context api
- 
- 
-  
 
   return (
     <div className="container w-full bg-gray-50 flex items-center justify-center">
