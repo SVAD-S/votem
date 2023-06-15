@@ -1,21 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ethers } from "ethers";
+import ElectionContract from "../build/contracts/ElectionContract.json";
 
 const ElectionData = () => {
   const [electionList, setElectionList] = useState([]);
+  const [account, setAccount] = useState("");
+  const Address = ElectionContract.networks[5777].address;
+
+  async function initializeProvider() {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    return new ethers.Contract(Address, ElectionContract.abi, signer);
+  }
+
+  async function requestAccount() {
+    const account = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    setAccount(account[0]);
+  }
 
   const handleInputChange = (e) => {};
 
   async function getElections() {
-    // if (typeof window.ethereum !== "undefined") {
-    //   const contract = await initializeProvider();
-    // try {
-    //   let a = await contract.getElectionNames();
-    //   console.log(a.toString());
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    //  }
+    if (typeof window.ethereum !== "undefined") {
+      const contract = await initializeProvider();
+      try {
+        let a = await contract.getElectionNames();
+        setElectionList(a);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   useEffect(() => {
