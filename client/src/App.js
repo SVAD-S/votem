@@ -28,11 +28,7 @@ function App() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 ">
-      <Navbar
-        initializeProvider={initializeProvider}
-        requestAccount={requestAccount}
-      />
-      <Loader />
+      <Navbar />
       <Outlet />
     </div>
   );

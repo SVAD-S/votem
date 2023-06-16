@@ -12,8 +12,8 @@ import NewElection from "./components/NewElection";
 import ElectionData from "./components/ElectionData";
 import ViewResult from "./components/ViewResult";
 
-
 import { AuthContextProvider } from "./components/custom/context/AuthContext";
+import ElectionDetails from "./components/ElectionDetails";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "/view-results",
         element: <ViewResult />,
+      },
+      {
+        path: "/election-details/:electionId",
+        element: <ElectionDetails />,
       },
     ],
   },

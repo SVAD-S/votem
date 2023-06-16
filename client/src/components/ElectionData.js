@@ -28,6 +28,7 @@ const ElectionData = () => {
       const contract = await initializeProvider();
       try {
         let a = await contract.getElectionNames();
+
         setElectionList(a);
       } catch (error) {
         console.log(error);
