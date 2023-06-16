@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import ElectionContract from "../build/contracts/ElectionContract.json";
 import { ethers } from "ethers";
+import { useAuthContext } from "./custom/hooks/useAuthContext";
 
 function NewElection() {
   const [account, setAccount] = useState("");
   const [electionName, setElectionName] = useState("");
   const [electionDesc, setElectionDesc] = useState("");
   const Address = ElectionContract.networks[5777].address;
+  const { setLoading, clearLoading } = useAuthContext();
+
+  let provider = null;
 
   const handleNameChange = (e) => {
     setElectionName(e.target.value);
@@ -18,11 +22,10 @@ function NewElection() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await createElection();
-    console.log("Successfull");
   };
 
   async function initializeProvider() {
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     return new ethers.Contract(Address, ElectionContract.abi, signer);
   }
@@ -39,10 +42,22 @@ function NewElection() {
       const contract = await initializeProvider();
 
       console.log(electionName, electionDesc);
+      setLoading();
       try {
-        await contract.createElection(electionName, electionDesc);
+        const transaction = await contract.createElection(
+          electionName,
+          electionDesc
+        );
+        const recipt = await provider.waitForTransaction(transaction?.hash);
+        if (recipt?.status === 1) {
+          console.log("Election creation confirmed");
+        } else {
+          console.log("Election creation failed");
+        }
       } catch (error) {
         console.log(error);
+      } finally {
+        clearLoading();
       }
     }
   }

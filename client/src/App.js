@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import ElectionContract from "./build/contracts/ElectionContract.json";
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Loader from "./components/Loader";
 
 function App() {
   const [account, setAccount] = useState("");
@@ -31,6 +32,7 @@ function App() {
         initializeProvider={initializeProvider}
         requestAccount={requestAccount}
       />
+      <Loader />
       <Outlet />
     </div>
   );
