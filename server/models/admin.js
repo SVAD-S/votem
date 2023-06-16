@@ -7,6 +7,10 @@ const AdminSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  isAdmin: {
+    type:Boolean,
+    
+  },
 });
 
 const Admin = mongoose.models.Admin || mongoose.model("Admin", AdminSchema);

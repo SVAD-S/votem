@@ -58,15 +58,18 @@ electionRouter.post(
     try {
       const name = req.body.username
       const pswd = req.body.password
+      const admin = true
       const election = await Admin.findOne({
         username: req.body.username,
         password: req.body.password,
+        // isAdmin : req.body.isAdmin,
       });
-      if (election === null) {
+      if (election === null) {  
         res.send(false);
       } else {
         //res.send(true);
-        res.status(200).json({ details: { name, pswd } });
+         res.status(200).json({ details: { name, pswd, admin } });
+        // res.status(200).json(election);
       }
     } catch (error) {
       console.error(error);
