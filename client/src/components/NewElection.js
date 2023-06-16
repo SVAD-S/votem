@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ElectionContract from "../build/contracts/ElectionContract.json";
 import { ethers } from "ethers";
 import { useAuthContext } from "./custom/hooks/useAuthContext";
+import { notifyError, notifySuccess } from "./Toast/Toasters";
 
 function NewElection() {
   const [account, setAccount] = useState("");
@@ -51,11 +52,18 @@ function NewElection() {
         const recipt = await provider.waitForTransaction(transaction?.hash);
         if (recipt?.status === 1) {
           console.log("Election creation confirmed");
+          notifySuccess("Election creation confirmed");
         } else {
           console.log("Election creation failed");
         }
       } catch (error) {
-        console.log(error);
+        notifyError(
+          error.message
+            ? error.message
+            : error.info.error.message
+            ? error.info.error.message
+            : "Election creation failed"
+        );
       } finally {
         clearLoading();
       }
