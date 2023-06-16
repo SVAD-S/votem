@@ -10,6 +10,8 @@ import UserLogin from "./components/Login/UserLogin";
 import SignUp from "./components/SignUp/SignUp";
 import NewElection from "./components/NewElection";
 import ElectionData from "./components/ElectionData";
+import ViewResult from "./components/ViewResult";
+
 
 import { AuthContextProvider } from "./components/custom/context/AuthContext";
 
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/election-list",
         element: <ElectionData />,
+      },
+      {
+        path: "/view-results",
+        element: <ViewResult />,
       },
     ],
   },
