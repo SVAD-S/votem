@@ -13,8 +13,6 @@ import ElectionData from "./components/ElectionData";
 
 import { AuthContextProvider } from "./components/custom/context/AuthContext";
 
-// import { AuthContextProvider } from "./components/custom/AuthContext";
-
 const router = createBrowserRouter([
   {
     path: "/",

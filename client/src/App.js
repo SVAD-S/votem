@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 
 function App() {
   const [account, setAccount] = useState("");
-  const [greeting, setGreeting] = useState("");
   const Address = ElectionContract.networks[5777].address;
 
   async function initializeProvider() {
@@ -22,43 +21,16 @@ function App() {
     setAccount(account[0]);
   }
 
-  async function fetchData() {
-    if (typeof window.ethereum !== "undefined") {
-      const contract = await initializeProvider();
-      try {
-        const temp = await contract.greet();
-        setGreeting(temp);
-      } catch (e) {
-        console.log("error fetching owner: ", e);
-      }
-    }
-  }
-
-  async function setGreeter() {
-    if (typeof window.ethereum !== "undefined") {
-      const contract = await initializeProvider();
-
-      try {
-        console.log(await contract.greeter("Im Vipi"));
-      } catch (error) {}
-    }
-  }
   useEffect(() => {
     requestAccount();
   }, []);
 
-  useEffect(() => {
-    if (account) {
-      fetchData();
-    }
-  }, [account]);
   return (
     <div className="h-screen flex flex-col bg-gray-50 ">
-      {/* <div className="text-orange-500">
-        Account is {account} and greeting is {greeting}
-      </div>
-      <button onClick={setGreeter}>Thomas</button> */}
-      <Navbar />
+      <Navbar
+        initializeProvider={initializeProvider}
+        requestAccount={requestAccount}
+      />
       <Outlet />
     </div>
   );
