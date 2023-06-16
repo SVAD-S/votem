@@ -48,25 +48,17 @@ const ElectionData = () => {
         <>
           <div
             className="flex mt-4 px-4 py-1 items-center  border rounded-md hover:bg-zinc-100"
-            key={election.election_id}
+            key={election}
           >
-            <p className="w-full text-grey-darkest">{election.election_name}</p>
+            <p className="w-full text-grey-darkest">{election}</p>
+
             <Link
-              to={`/candidates/${election.election_id}`}
-              className="title"
-              onClick={handleInputChange}
-            >
-              <button className="flex-no-shrink p-2 text-sm ml-4 mr-2 border-2 rounded hover:text-white text-green-600 border-green-500 hover:bg-green-400">
-                Add candidate
-              </button>
-            </Link>
-            <Link
-              to={`/voteCount/${election.election_id}`}
+              to={`/election-details/${election}`}
               className="title"
               onClick={handleInputChange}
             >
               <button className="flex-no-shrink p-2 text-sm ml-2 border-2 rounded text-yellow-500 border-yellow-500 hover:text-white hover:bg-yellow-400">
-                View vote count
+                View Details
               </button>
             </Link>
           </div>
