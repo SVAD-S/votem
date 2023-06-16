@@ -56,7 +56,6 @@ function Navbar() {
           </span>
         </Link>
 
-
         <Link to="/" onClick={handleClick}>
           {user ? (
             <span className="text-white text-lg no-underline text-grey-darkest hover:text-blue-dark mx-4 p-2 font-bold">
