@@ -43,26 +43,49 @@ const ElectionData = () => {
   return (
     <div className="container py-12">
       <h2 className="mt-6 mb-16 text-center text-3xl font-extrabold text-gray-900">
-        Active Elections
+        Elections
       </h2>
-      {electionList.map((election) => (
+      {electionList.map((election, index) => (
         <>
-          <div
-            className="flex mt-4 px-4 py-1 items-center  border rounded-md hover:bg-zinc-100"
-            key={election[0]}
-          >
-            <p className="w-full text-grey-darkest">{election[0]}</p>
-
-            <Link
-              to={`/election-details/${election[0]}`}
-              className="title"
-              onClick={handleInputChange}
+          {election[1] == true && election[2] == false ? (
+            <div
+              className="flex mt-4 px-4 py-1 items-center border rounded-md hover:bg-zinc-100"
+              key={index}
             >
-              <button className="flex-no-shrink p-2 text-sm ml-2 border-2 rounded text-yellow-500 border-yellow-500 hover:text-white hover:bg-yellow-400">
-                View Details
-              </button>
-            </Link>
-          </div>
+              {" "}
+              <span className="text-green-500 mr-2">◉</span>
+              <p className="w-full text-grey-darkest">{election[0]}</p>
+              <Link
+                to={`/election-details/${election[0]}`}
+                className="title"
+                onClick={handleInputChange}
+              >
+                <button className="flex-no-shrink p-2 text-sm ml-2 border-2 rounded text-yellow-500 border-yellow-500 hover:text-white hover:bg-yellow-400">
+                  View Details
+                </button>
+              </Link>
+            </div>
+          ) : election[1] == false ? (
+            <div
+              className="flex mt-4 px-4 py-1 items-center border   rounded-md hover:bg-zinc-100"
+              key={index}
+            >
+              <span className="text-yellow-500 mr-2">◉</span>
+              <p className="w-full text-grey-darkest">{election[0]}</p>
+
+              <Link
+                to={`/election-details/${election[0]}`}
+                className="title"
+                onClick={handleInputChange}
+              >
+                <button className="flex-no-shrink p-2 text-sm ml-2 border-2 rounded text-yellow-500 border-yellow-500 hover:text-white hover:bg-yellow-400">
+                  View Details
+                </button>
+              </Link>
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       ))}
     </div>

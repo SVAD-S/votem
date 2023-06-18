@@ -30,7 +30,8 @@ function ElectionResult() {
       const contract = await initializeProvider();
       try {
         let a = await contract.getCandidateList(electionId);
-        setCandidateList(a);
+        let b = [...a].sort((b, a) => (a[4] > b[4] ? 1 : a[4] < b[4] ? -1 : 0));
+        setCandidateList(b);
       } catch (error) {
         notifyError(
           error.message
@@ -60,23 +61,25 @@ function ElectionResult() {
         <h2 className="mt-6 mb-16 text-center text-2xl font-bold text-gray-900">
           Vote Statistics
         </h2>
-        {candidateList.map((candidates) => (
-          <>
-            <div
-              className="flex mt-4 px-4 py-1 items-center justify-between  border rounded-md hover:bg-zinc-100"
-              key={candidates[0]}
-            >
-              <div>
-                <p className="w-full text-grey-darkest font-bold">
-                  {candidates[1]}
-                </p>
-                <p className="text-zinc-500 italic">{candidates.details}</p>
-              </div>
-              <button className="text-green-500 text-xl font-bold m-2">
-                {parseInt(candidates[4])}
-              </button>
+        {candidateList.map((candidates, index) => (
+          <div
+            className="flex mt-4 px-4 py-1 items-center justify-between  border rounded-md hover:bg-zinc-100"
+            key={index}
+          >
+            <div className="w-full flex">
+              <p className=" text-grey-darkest font-bold">{candidates[1]}</p>
+              {index == 0 ? (
+                <span className="text-green-500 px-2 font-bold">
+                  ( Winner )
+                </span>
+              ) : (
+                <></>
+              )}
             </div>
-          </>
+            <button className="text-green-500 text-xl font-bold m-2">
+              {parseInt(candidates[4])}
+            </button>
+          </div>
         ))}
       </div>
     </div>

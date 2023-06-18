@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ElectionContract from "../build/contracts/ElectionContract.json";
 import { ethers } from "ethers";
 import { useAuthContext } from "./custom/hooks/useAuthContext";
@@ -17,6 +17,7 @@ function ElectionDetails() {
   const [electionEnded, setElectionEnded] = useState(false);
   const { setLoading, clearLoading } = useAuthContext();
   let provider = null;
+  let navigate = useNavigate();
 
   const handleNameChange = (e) => {
     setCandidateName(e.target.value);
@@ -58,6 +59,7 @@ function ElectionDetails() {
         );
       } finally {
         clearLoading();
+        getCandidates();
       }
       console.log("Successfull");
     }
@@ -100,6 +102,7 @@ function ElectionDetails() {
         );
       } finally {
         clearLoading();
+        navigate("/election-list");
       }
     }
   }
@@ -127,6 +130,7 @@ function ElectionDetails() {
         );
       } finally {
         clearLoading();
+        navigate("/election-list");
       }
     }
   }
@@ -200,10 +204,10 @@ function ElectionDetails() {
         <div class="border-r border-gray-300">
           {electionStarted === false ? (
             <>
-              <div className="w-full flex-row items-center justify-center bg-gray-50 py-12 px-16 sm:px-6 lg:px-8">
+              <div className="w-full flex-row items-center justify-center bg-gray-50 px-16 sm:px-6 lg:px-8">
                 <div className="w-full  space-y-8">
                   <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">
                       Add a Candidate
                     </h2>
                   </div>
