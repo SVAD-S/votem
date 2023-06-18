@@ -11,9 +11,11 @@ import SignUp from "./components/SignUp/SignUp";
 import NewElection from "./components/NewElection";
 import ElectionData from "./components/ElectionData";
 import ViewResult from "./components/ViewResult";
+import ElectionResult from "./components/ElectionResult";
 
 import { AuthContextProvider } from "./components/custom/context/AuthContext";
 import ElectionDetails from "./components/ElectionDetails";
+import VotableElections from "./components/VotableElections";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +54,14 @@ const router = createBrowserRouter([
       {
         path: "/election-details/:electionId",
         element: <ElectionDetails />,
+      },
+      {
+        path: "/election-results/:electionId",
+        element: <ElectionResult />,
+      },
+      {
+        path: "/votable-elections",
+        element: <VotableElections />,
       },
     ],
   },
