@@ -49,12 +49,12 @@ const ElectionData = () => {
         <>
           <div
             className="flex mt-4 px-4 py-1 items-center  border rounded-md hover:bg-zinc-100"
-            key={election}
+            key={election[0]}
           >
-            <p className="w-full text-grey-darkest">{election}</p>
+            <p className="w-full text-grey-darkest">{election[0]}</p>
 
             <Link
-              to={`/election-details/${election}`}
+              to={`/election-details/${election[0]}`}
               className="title"
               onClick={handleInputChange}
             >

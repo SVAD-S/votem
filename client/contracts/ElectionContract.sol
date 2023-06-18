@@ -20,12 +20,18 @@ contract ElectionContract {
         uint candidateCount;
         address admin;
         bool status;
+        mapping(address => bool) voters;
     }
 
     mapping(address => bool) public admins;
     mapping(string => ElectionDetails) public elections;
-    mapping(address => bool) public voters;
-    string[] public electionNames;
+
+    struct AllElectionName {
+        string name;
+        bool startstatus;
+        bool endstatus;
+    }
+    AllElectionName[] public allElectionNames;
 
     event ElectionCreated(string name, string description);
     event CandidateAdded(
@@ -61,7 +67,7 @@ contract ElectionContract {
             "Invalid election details"
         );
         require(
-            elections[name].candidateCount == 0,
+            !checkElectionExists(name),
             "Election with the same name already exists"
         );
 
@@ -71,14 +77,27 @@ contract ElectionContract {
         elections[name].candidateCount = 0;
         elections[name].admin = msg.sender;
         elections[name].status = false;
-        electionNames.push(name);
+        allElectionNames.push(AllElectionName(name, false, false));
         emit ElectionCreated(name, description);
         admins[msg.sender] = true;
     }
 
+    function checkElectionExists(
+        string memory electionName
+    ) public view returns (bool) {
+        for (uint i = 0; i < allElectionNames.length; i++) {
+            if (
+                keccak256(bytes(allElectionNames[i].name)) ==
+                keccak256(bytes(electionName))
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function addCandidate(
         string memory electionName,
-        uint id,
         string memory name,
         uint voterId,
         string memory partyName
@@ -92,6 +111,7 @@ contract ElectionContract {
         );
 
         election.candidateCount++;
+        uint id = election.candidateCount;
         election.candidates[id] = Candidate(id, name, voterId, partyName, 0);
         emit CandidateAdded(electionName, id, name);
     }
@@ -100,12 +120,12 @@ contract ElectionContract {
         ElectionDetails storage election = elections[electionName];
         require(election.status, "Election is not started");
         require(election.isActive, "Election is not active");
-        require(!voters[msg.sender], "Voter has already voted");
+        require(!election.voters[msg.sender], "Voter has already voted");
         require(
             election.admin != msg.sender,
             "Admin is not allowed to vote in the election"
         );
-        voters[msg.sender] = true;
+        election.voters[msg.sender] = true;
 
         Candidate storage candidate = election.candidates[candidateId];
         require(candidate.id != 0, "Invalid candidate");
@@ -146,10 +166,6 @@ contract ElectionContract {
     ) public view returns (string memory, uint, string memory) {
         ElectionDetails storage election = elections[electionName];
         require(!election.status, "Election is not ended");
-        require(
-            election.admin == msg.sender,
-            "Only the admin can access winner details"
-        );
         Candidate memory winner;
         uint maxVotes = 0;
         for (uint i = 1; i <= election.candidateCount; i++) {
@@ -202,10 +218,18 @@ contract ElectionContract {
         require(election.isActive, "Election is already active");
         require(
             election.admin == msg.sender,
-            "Only the admin can remove candidates"
+            "Only the admin can start election"
         );
 
         election.status = true;
+        for (uint i = 0; i < allElectionNames.length; i++) {
+            if (
+                keccak256(bytes(allElectionNames[i].name)) ==
+                keccak256(bytes(electionName))
+            ) {
+                allElectionNames[i].startstatus = true;
+            }
+        }
         emit ElectionStarted(electionName);
     }
 
@@ -215,14 +239,36 @@ contract ElectionContract {
         require(election.isActive, "Election is not active");
         require(
             election.admin == msg.sender,
-            "Only the admin can remove candidates"
+            "Only the admin can stop election"
         );
 
         election.status = false;
+        election.isActive = false;
+        for (uint i = 0; i < allElectionNames.length; i++) {
+            if (
+                keccak256(bytes(allElectionNames[i].name)) ==
+                keccak256(bytes(electionName))
+            ) {
+                allElectionNames[i].endstatus = true;
+            }
+        }
         emit ElectionStopped(electionName);
     }
 
-    function getElectionNames() public view returns (string[] memory) {
-        return electionNames;
+    function getElectionNames() public view returns (AllElectionName[] memory) {
+        return allElectionNames;
+    }
+
+    function getCandidateList(
+        string memory electionName
+    ) public view returns (Candidate[] memory) {
+        ElectionDetails storage election = elections[electionName];
+        Candidate[] memory candidateList = new Candidate[](
+            election.candidateCount
+        );
+        for (uint i = 1; i <= election.candidateCount; i++) {
+            candidateList[i - 1] = election.candidates[i];
+        }
+        return candidateList;
     }
 }

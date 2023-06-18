@@ -28,8 +28,7 @@ const ElectionData = () => {
       const contract = await initializeProvider();
       try {
         let a = await contract.getElectionNames();
-        let b = await contract.getWinnerDetails(a[1]);
-        console.log(a[1], b);
+        console.log(a);
         setElectionList(a);
       } catch (error) {
         console.log(error);
@@ -48,22 +47,26 @@ const ElectionData = () => {
       </h2>
       {electionList.map((election) => (
         <>
-          <div
-            className="flex mt-4 px-4 py-1 items-center  border rounded-md hover:bg-zinc-100"
-            key={election}
-          >
-            <p className="w-full text-grey-darkest">{election}</p>
-
-            <Link
-              to={`/election-details/${election}`}
-              className="title"
-              onClick={handleInputChange}
+          {election[2] == true ? (
+            <div
+              className="flex mt-4 px-4 py-1 items-center  border rounded-md hover:bg-zinc-100"
+              key={election[0]}
             >
-              <button className="flex-no-shrink p-2 text-sm ml-2 border-2 rounded text-yellow-500 border-yellow-500 hover:text-white hover:bg-yellow-400">
-                View Details
-              </button>
-            </Link>
-          </div>
+              <p className="w-full text-grey-darkest">{election[0]}</p>
+
+              <Link
+                to={`/election-results/${election[0]}`}
+                className="title"
+                onClick={handleInputChange}
+              >
+                <button className="flex-no-shrink p-2 text-sm ml-2 border-2 rounded text-yellow-500 border-yellow-500 hover:text-white hover:bg-yellow-400">
+                  View Results
+                </button>
+              </Link>
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       ))}
     </div>
