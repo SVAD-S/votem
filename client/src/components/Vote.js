@@ -1,126 +1,117 @@
-import React, { Component } from "react";
-import Web3 from "web3";
-import Election from "../../build/Election.json";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import ElectionContract from "../build/contracts/ElectionContract.json";
+import { ethers } from "ethers";
+import { useAuthContext } from "./custom/hooks/useAuthContext";
+import { notifyError, notifySuccess } from "./Toast/Toasters";
 
-class Vote extends Component {
-  async componentWillMount() {
-    await this.loadWeb3();
-    await this.loadBlockchainData();
+function Vote() {
+  let { electionId } = useParams();
+  const [account, setAccount] = useState("");
+  const [candidateList, setCandidateList] = useState([]);
+  const { setLoading, clearLoading } = useAuthContext();
+  const Address = ElectionContract.networks[5777].address;
+  let provider = null;
+
+  async function initializeProvider() {
+    provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    return new ethers.Contract(Address, ElectionContract.abi, signer);
   }
 
-  async loadWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      window.alert(
-        "Non-Ethereum browser detected. You should consider trying MetaMask!"
-      );
-    }
+  async function requestAccount() {
+    const account = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    setAccount(account[0]);
   }
 
-  async loadBlockchainData() {
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    console.log(accounts);
-    this.setState({ account: accounts[0] });
-    const networkId = await web3.eth.net.getId();
-    const networkData = Election.networks[networkId];
-    if (networkData) {
-      const election = new web3.eth.Contract(Election.abi, networkData.address);
-      this.setState({ election });
-      const candCount = await election.methods.candidatesCount().call();
-      this.setState({ candCount });
-      for (var i = 1; i <= candCount; i++) {
-        const candidates = await election.methods.candidates(i).call();
-        if (candidates.election_id === this.state.id) {
-          this.setState({
-            candidates: [...this.state.candidates, candidates],
-          });
+  async function voteCandidate(candidate) {
+    if (typeof window.ethereum !== "undefined") {
+      const contract = await initializeProvider();
+      setLoading();
+      try {
+        const transaction = await contract.vote(electionId, candidate);
+        console.log("Election stop requested");
+        const recipt = await provider.waitForTransaction(transaction?.hash);
+        if (recipt?.status === 1) {
+          console.log("Election ending confirmed");
+          notifySuccess("Election ended successfully");
+        } else {
+          console.log("Election ending failed");
         }
+      } catch (error) {
+        notifyError(
+          error.message
+            ? error.message
+            : error.info.error.message
+            ? error.info.error.message
+            : "Election Ending request failed"
+        );
+      } finally {
+        clearLoading();
       }
-      console.log(this.state.candidates);
-    } else {
-      window.alert("Election contract not deployed to detected network.");
     }
   }
 
-  handleInputChange = (e) => {
-    console.log(e.target.id);
-    this.setState({
-      selectedId: e.target.id,
-    });
-    this.vote(e.target.id);
-  };
-
-  vote(id) {
-    console.log(this.state.selectedId);
-    this.setState({ loading: true });
-    this.state.election.methods
-      .vote(id)
-      .send({ from: this.state.account })
-      .once("receipt", (receipt) => {
-        this.setState({ loading: false });
-        window.location.assign("/");
-        console.log(receipt);
-      });
+  async function getCandidates() {
+    if (typeof window.ethereum !== "undefined") {
+      const contract = await initializeProvider();
+      try {
+        let a = await contract.getCandidateList(electionId);
+        setCandidateList(a);
+      } catch (error) {
+        notifyError(
+          error.message
+            ? error.message
+            : error.info.error.message
+            ? error.info.error.message
+            : "Election list Fetch failed"
+        );
+      }
+    }
   }
+  useEffect(() => {
+    getCandidates();
+  }, []);
+  return (
+    <div className="container py-12">
+      <div className="flex flex-col justify-center">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          {electionId}
+        </h2>
+        <span className="mt-3 mb-16 text-center text-sm font-extrabold text-green-500">
+          Active
+        </span>
+      </div>
 
-  componentDidMount() {
-    let id = this.props.match.params.id;
-    this.setState({
-      id: id,
-    });
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: null,
-      account: "",
-      election: null,
-      candCount: 0,
-      candidates: [],
-      loading: true,
-      selectedId: null,
-    };
-  }
-
-  render() {
-    const electionList = this.state.candidates.map((candidates) => {
-      return (
-        <div
-          className="flex mt-4 px-4 py-1 items-center justify-between  border rounded-md hover:bg-zinc-100"
-          key={candidates.id}
-        >
-          <div>
-            <p className="w-full text-grey-darkest font-bold">
-              {candidates.name}
-            </p>
-            <p className="text-zinc-500 italic">{candidates.details}</p>
-          </div>
-          <button
-            className="text-green-500 text-xl font-bold m-2"
-            id={candidates.id}
-            onClick={this.handleInputChange}
-          >
-            Vote
-          </button>
-        </div>
-      );
-    });
-    return (
-      <div className="w-1/2">
-        <h2 className="mt-3 mb-16 text-center text-3xl font-extrabold text-gray-900">
+      <div className="px-16 sm:px-6 lg:px-8">
+        <h2 className="mt-6 mb-16 text-center text-2xl font-bold text-gray-900">
           Candidates
         </h2>
-        {electionList}
+        {candidateList.map((candidates, index) => (
+          <>
+            <div
+              className="flex mt-4 px-4 py-1 items-center justify-between  border rounded-md hover:bg-zinc-100"
+              key={candidates[0]}
+            >
+              <div>
+                <p className="w-full text-grey-darkest font-bold">
+                  {candidates[1]}
+                </p>
+              </div>
+              <button
+                onClick={() => voteCandidate(index + 1)}
+                className="flex-no-shrink p-2 text-sm ml-2 border-2 rounded text-green-500 border-green-500 hover:text-white hover:bg-green-400"
+              >
+                Vote
+              </button>
+            </div>
+          </>
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default Vote;
